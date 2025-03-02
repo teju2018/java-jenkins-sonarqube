@@ -32,25 +32,28 @@ pipeline {
                 withSonarQubeEnv('SonarQube') { // Use the name configured in Jenkins settings
                     sh '''
                      mvn clean verify sonar:sonar \
-                      -Dsonar.projectKey=sam \
-                      -Dsonar.projectName='sam' \
+                      -Dsonar.projectKey=havetoken \
+                      -Dsonar.projectName='havetoken' \
                       -Dsonar.host.url=http://35.208.183.106:9000 \
-                      -Dsonar.token=sqp_5433f697ef3eb4066d4f3df351deb4f1b1a6b273
+                      -Dsonar.token=sqa_6f68f248beedbe140d0ed3ca84690e584ddea1ac
                     '''
                 }
             }
         }
 
 
-        stage('Quality Gate') {
-    steps {
-        script {
-            timeout(time: 10, unit: 'MINUTES') { 
-                waitForQualityGate abortPipeline: true
+       stage('Quality Gate') {
+            steps {
+                script {
+                    timeout(time: 10, unit: 'MINUTES') {
+                        def qg = waitForQualityGate()
+                        if (qg.status != 'OK') {
+                            error "Pipeline failed due to quality gate failure: ${qg.status}"
+                        }
+                    }
+                }
             }
         }
-    }
-}
 
         stage("Run Docker Compose") {
             steps {
