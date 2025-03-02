@@ -31,11 +31,11 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarQube') { // Use the name configured in Jenkins settings
                     sh '''
-                   mvn clean verify sonar:sonar \
-                  -Dsonar.projectKey=java-sonarqube \
-                  -Dsonar.projectName='java-sonarqube' \
+                  mvn clean verify sonar:sonar \
+                  -Dsonar.projectKey=jam \
+                  -Dsonar.projectName='jam' \
                   -Dsonar.host.url=http://35.208.183.106:9000 \
-                  -Dsonar.token=sqp_5be70971e8d452829ad44f7c0cb574ddad0e0ec4
+                  -Dsonar.token=sqp_c9348f92f3a4ebaa03fc286ebf3625bc7c1cd1bd
                     '''
                 }
             }
@@ -44,7 +44,7 @@ pipeline {
         stage('Quality Gate') {
             steps {
                 script {
-                    timeout(time: 3, unit: 'MINUTES') {
+                    timeout(time: 5, unit: 'MINUTES') {
                         waitForQualityGate abortPipeline: true
                     }
                 }
