@@ -31,11 +31,11 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarQube') { // Use the name configured in Jenkins settings
                     sh '''
-                  mvn clean verify sonar:sonar \
-                  -Dsonar.projectKey=jam \
-                  -Dsonar.projectName='jam' \
-                  -Dsonar.host.url=http://35.208.183.106:9000 \
-                  -Dsonar.token=sqp_c9348f92f3a4ebaa03fc286ebf3625bc7c1cd1bd
+                     mvn clean verify sonar:sonar \
+                      -Dsonar.projectKey=jam \
+                      -Dsonar.projectName='jam' \
+                      -Dsonar.host.url=http://35.208.183.106:9000 \
+                      -Dsonar.token=sqp_e1f5f2d1db0adcd3e646de10a5a7b5dcc27ffaeb
                     '''
                 }
             }
