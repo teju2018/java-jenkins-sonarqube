@@ -1,0 +1,56 @@
+---
+- name: Install prerequisites for Docker
+  yum:
+    name: yum-utils
+    state: present
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_host != "35.208.183.106"
+
+- name: Add Docker repository
+  shell: yum config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  args:
+    creates: /etc/yum.repos.d/docker-ce.repo
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_host != "35.208.183.106"
+
+- name: Install Docker
+  yum:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    state: present
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_host != "35.208.183.106"
+
+- name: Start and enable Docker
+  service:
+    name: docker
+    state: started
+    enabled: yes
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_host != "35.208.183.106"
+
+- name: Get build number
+  debug:
+    msg: "{{ build_number }}"
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_host != "35.208.183.106"
+
+- name: Pull Docker image for pyweb1
+  command: docker pull ganesh6498/java-sonarqube:{{ build_number }}
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_host != "35.208.183.106"
+
+- name: Run the container
+  command: docker run -it -d -p 8085:8081 ganesh6498/java-sonarqube:{{ build_number }}
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_host != "35.208.183.106"
+

@@ -1,0 +1,6 @@
+projectKey=simple-rule-java
+serverUrl=http://35.208.183.106:9000
+serverVersion=25.2.0.102705
+dashboardUrl=http://35.208.183.106:9000/dashboard?id=simple-rule-java
+ceTaskId=cf02eeac-e0ab-4f79-b7f2-76a17e717a75
+ceTaskUrl=http://35.208.183.106:9000/api/ce/task?id=cf02eeac-e0ab-4f79-b7f2-76a17e717a75
