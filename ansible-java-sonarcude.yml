@@ -2,5 +2,4 @@
 - hosts: all
   become: true
   roles:
-
-    - java-sonarqube 
+    - java-sonrqube
