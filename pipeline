@@ -31,11 +31,11 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarQube') { // Use the name configured in Jenkins settings
                     sh '''
-                   mvn clean verify sonar:sonar \
-                      -Dsonar.projectKey=web1 \
-                      -Dsonar.projectName='web1' \
-                      -Dsonar.host.url=http://35.208.183.106:9000 \
-                      -Dsonar.token=squ_d9269f161aa66275d3258e0b5ed33ec1b80b5699
+                           mvn clean verify sonar:sonar \
+                              -Dsonar.projectKey=java5 \
+                              -Dsonar.projectName='java5' \
+                              -Dsonar.host.url=http://35.208.183.106:9000 \
+                              -Dsonar.token=squ_0a7bbd396615376a3b5bad329f2cc8902c2245ec
                     '''
                 }
             }
