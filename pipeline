@@ -100,7 +100,7 @@ pipeline {
         stage("Ansible Deployment") {
             steps {
                 sh '''
-                ansible-playbook ansibleplay.yml -e build_number=$BUILD_NUMBER
+                ansible-playbook ansible-java-sonarcude.yml -e build_number=$BUILD_NUMBER
                 '''
             }
         }
