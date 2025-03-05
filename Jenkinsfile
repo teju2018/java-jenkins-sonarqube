@@ -33,7 +33,21 @@ pipeline {
                 }
             }
         }
-
+        stage("Quality Gate") {
+            steps {
+                timeout(time: 10, unit: 'MINUTES') { // Wait max 10 mins
+                    script {
+                        def qualityGate = waitForQualityGate()
+                        if (qualityGate.status != 'OK') {
+                            error " Quality Gate Failed! Fix issues in SonarQube."
+                        } else {
+                            echo " Quality Gate Passed!"
+                        }
+                    }
+                }
+            }
+        }
+        /*
         stage("Quality Gate") {
             steps {
               timeout(time: 10, unit: 'MINUTES') {
@@ -42,7 +56,7 @@ pipeline {
             }
           }
 
-
+*/
         stage("Run Docker Compose") {
             steps {
                 sh '''
