@@ -2,7 +2,6 @@ pipeline {
     agent any
     environment {
         IMAGE_NAME = "java-sonarqube"
-        
     }
     stages {
         stage("Docker Hub Connection") {
@@ -17,17 +16,15 @@ pipeline {
             }
         }
 
-       
-
-        stage('Build & SonarQube Analysis') {
+        stage('Build & SonarQube Analysis') { 
             steps {
-                withSonarQubeEnv('SonarQube') { // Use the name configured in Jenkins settings
+                withCredentials([string(credentialsId: 'SonarQube', variable: 'SONAR_TOKEN')]) {
                     sh '''
-                           mvn clean verify sonar:sonar \
-                              -Dsonar.projectKey=java1 \
-                              -Dsonar.projectName='java1' \
-                              -Dsonar.host.url=http://192.168.2.101:9000 \
-                              -Dsonar.token=squ_7d6bf5a9809c248d0000f8ba8e9f79493f847a59
+                    mvn clean verify sonar:sonar \
+                      -Dsonar.projectKey=java1 \
+                      -Dsonar.projectName='java1' \
+                      -Dsonar.host.url=http://192.168.2.101:9000 \
+                      -Dsonar.login=$SONAR_TOKEN
                     '''
                 }
             }
@@ -47,6 +44,7 @@ pipeline {
                 }
             }
         }
+
         stage('Check Code Coverage') {
             steps {
                 script {
@@ -60,8 +58,6 @@ pipeline {
                 }
             }
         }
-    
-
 
         stage("Run Docker Compose") {
             steps {
@@ -71,19 +67,13 @@ pipeline {
             }
         }
 
-       
-
-
         stage("Docker Tags & Push (Python App)") {
             steps {
                 sh '''
                 docker tag ${IMAGE_NAME} xyz673/${IMAGE_NAME}:${BUILD_NUMBER}
                 docker push xyz673/${IMAGE_NAME}:${BUILD_NUMBER}
-
                 '''
             }
         }
-
     }
 }
-
