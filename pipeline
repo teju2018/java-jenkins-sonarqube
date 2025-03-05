@@ -84,23 +84,6 @@ pipeline {
             }
         }
 
-        
-        stage("Ping Ansible") {
-            steps {
-                sh '''
-                sleep 10
-                ansible all -m ping
-                '''
-            }
-        }
-
-        stage("Ansible Deployment") {
-            steps {
-                sh '''
-                ansible-playbook ansible-java-sonarcude.yml -e build_number=$BUILD_NUMBER
-                '''
-            }
-        }
     }
 }
 
