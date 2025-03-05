@@ -17,7 +17,7 @@
 
         <!-- SonarQube Properties -->
         <sonar.projectKey>code-check</sonar.projectKey>
-        <sonar.host.url>http://<sonarqube-server-ip>:9000</sonar.host.url>
+        <sonar.host.url>http://192.168.2.101:9000</sonar.host.url>
         <sonar.login>${env.SONAR_TOKEN}</sonar.login>
     </properties>
 
