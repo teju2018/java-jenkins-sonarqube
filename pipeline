@@ -21,7 +21,7 @@ pipeline {
 
         stage('Build & SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube-Server') { // Use the name configured in Jenkins settings
+                withSonarQubeEnv('SonarQube') { // Use the name configured in Jenkins settings
                     sh '''
                            mvn clean verify sonar:sonar \
                               -Dsonar.projectKey=java1 \
