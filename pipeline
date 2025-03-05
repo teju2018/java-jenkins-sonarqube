@@ -2,8 +2,7 @@ pipeline {
     agent any
     environment {
         IMAGE_NAME = "java-sonarqube"
-        ARTIFACT_REPO = "us-central1-docker.pkg.dev/sam-452209/my-docker-1"
-        GOOGLE_APPLICATION_CREDENTIALS = credentials('gcp')
+        
     }
     stages {
         stage("Docker Hub Connection") {
@@ -18,36 +17,50 @@ pipeline {
             }
         }
 
-        stage("Google Cloud Login") {
-            steps {
-                sh '''
-                gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
-                gcloud auth configure-docker us-central1-docker.pkg.dev
-                '''
-            }
-        }
+       
 
         stage('Build & SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') { // Use the name configured in Jenkins settings
+                withSonarQubeEnv('sonarqube') { // Use the name configured in Jenkins settings
                     sh '''
                            mvn clean verify sonar:sonar \
-                              -Dsonar.projectKey=java5 \
-                              -Dsonar.projectName='java5' \
-                              -Dsonar.host.url=http://35.208.183.106:9000 \
-                              -Dsonar.token=squ_0a7bbd396615376a3b5bad329f2cc8902c2245ec
+                              -Dsonar.projectKey=java1 \
+                              -Dsonar.projectName='java1' \
+                              -Dsonar.host.url=http://192.168.2.101:9000 \
+                              -Dsonar.token=squ_7d6bf5a9809c248d0000f8ba8e9f79493f847a59
                     '''
                 }
             }
         }
 
-        stage("Quality Gate") {
+        stage('Quality Gate') {
             steps {
-              timeout(time: 10, unit: 'MINUTES') {
-                waitForQualityGate abortPipeline: true
-              }
+                script {
+                    timeout(time: 10, unit: 'MINUTES') {
+                        def qg = waitForQualityGate()
+                        echo "SonarQube Quality Gate Status: ${qg.status}"
+                        
+                        if (qg.status != 'OK') {
+                            error "Pipeline failed due to Quality Gate failure."
+                        }
+                    }
+                }
             }
-          }
+        }
+        stage('Check Code Coverage') {
+            steps {
+                script {
+                    def coverage = sh(script: "curl -s -u $SONAR_TOKEN: http://192.168.2.101:9000/api/measures/component?component=code-check&metricKeys=coverage | jq -r '.component.measures[0].value'", returnStdout: true).trim()
+                    
+                    echo "Code Coverage: ${coverage}%"
+                    
+                    if (coverage.toInteger() < 60) {
+                        error "Pipeline failed due to low code coverage (${coverage}%)"
+                    }
+                }
+            }
+        }
+    
 
 
         stage("Run Docker Compose") {
@@ -58,36 +71,20 @@ pipeline {
             }
         }
 
-        stage("Terraform Create Instance") {
-            steps {
-                sh '''
-                terraform init
-                terraform plan
-                terraform apply --auto-approve
-                '''
-            }
-        }
+       
+
 
         stage("Docker Tags & Push (Python App)") {
             steps {
                 sh '''
-                docker tag ${IMAGE_NAME} ganesh6498/${IMAGE_NAME}:${BUILD_NUMBER}
-                docker push ganesh6498/${IMAGE_NAME}:${BUILD_NUMBER}
+                docker tag ${IMAGE_NAME} xyz673/${IMAGE_NAME}:${BUILD_NUMBER}
+                docker push xyz673/${IMAGE_NAME}:${BUILD_NUMBER}
 
-                docker tag ${IMAGE_NAME} ${ARTIFACT_REPO}/${IMAGE_NAME}:${BUILD_NUMBER}
-                docker push ${ARTIFACT_REPO}/${IMAGE_NAME}:${BUILD_NUMBER}
                 '''
             }
         }
 
-        stage("Check Connection") {
-            steps {
-                sh '''
-                ansible-inventory --graph
-                '''
-            }
-        }
-
+        
         stage("Ping Ansible") {
             steps {
                 sh '''
