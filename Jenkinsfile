@@ -2,7 +2,7 @@
 pipeline {
     agent any
     environment {
-        IMAGE_NAME = "java-sonarqube"
+        IMAGE_NAME = "java-sonarqube3"
        
     }
     stages {
@@ -28,7 +28,7 @@ pipeline {
                               -Dsonar.projectKey=java1 \
                               -Dsonar.projectName='java1' \
                               -Dsonar.host.url=http://192.168.2.101:9000 \
-                              -Dsonar.token=squ_df8ccbc7419d258f34b097d68cf10ea3711f7230
+                              -Dsonar.token=squ_f614594338c7cc6932f43c382e891ed094cbde47
                     '''
                 }
             }
@@ -51,7 +51,7 @@ pipeline {
         stage("Quality Gate") {
             steps {
               timeout(time: 10, unit: 'MINUTES') {
-                waitForQualityGate abortPipeline: false
+                waitForQualityGate abortPipeline: true
               }
             }
           }
