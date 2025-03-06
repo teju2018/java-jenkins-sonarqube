@@ -28,7 +28,7 @@ pipeline {
                               -Dsonar.projectKey=java1 \
                               -Dsonar.projectName='java1' \
                               -Dsonar.host.url=http://192.168.2.101:9000 \
-                              -Dsonar.token=squ_7db09babe0b31e3a7e9c9e871fc520665607a155
+                              -Dsonar.token=squ_92ddb731de65390abb13bd4cb54bf891ece8b090
                     '''
                 }
             }
