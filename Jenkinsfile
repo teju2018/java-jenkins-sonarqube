@@ -33,7 +33,7 @@ pipeline {
                 }
             }
         }
-        /*
+        
         stage("Quality Gate") {
             steps {
                 timeout(time: 10, unit: 'MINUTES') { // Wait max 10 mins
@@ -48,15 +48,15 @@ pipeline {
                 }
             }
         }
-        */
-        stage("Quality Gate") {
+        
+     /*   stage("Quality Gate") {
             steps {
               timeout(time: 10, unit: 'MINUTES') {
                 waitForQualityGate abortPipeline: true
               }
             }
           }
-
+*/
 
         stage("Run Docker Compose") {
             steps {
