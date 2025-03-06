@@ -27,8 +27,8 @@ pipeline {
                            mvn clean verify sonar:sonar \
                               -Dsonar.projectKey=java1 \
                               -Dsonar.projectName='java1' \
-                              -Dsonar.host.url=http://192.168.2.101:8001 \
-                              -Dsonar.token=squ_f614594338c7cc6932f43c382e891ed094cbde47
+                              -Dsonar.host.url=http://192.168.2.101:9000 \
+                              -Dsonar.token=squ_7db09babe0b31e3a7e9c9e871fc520665607a155
                     '''
                 }
             }
